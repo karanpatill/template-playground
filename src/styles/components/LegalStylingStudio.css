@@ -1,0 +1,419 @@
+/* Legal Styling Studio – Slide-out Panel */
+
+/* CSS-variable bridge: applied to the preview wrapper so inner HTML paragraphs inherit */
+.lss-preview-container p,
+.lss-preview-container li,
+.lss-preview-container div {
+  margin-bottom: var(--lss-para-spacing, 8px);
+  letter-spacing: var(--lss-letter-spacing, 0em);
+}
+
+.lss-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.lss-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 280px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  pointer-events: all;
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lss-panel.lss-open {
+  transform: translateX(0);
+}
+
+.lss-panel.lss-dark {
+  background: rgba(30, 35, 50, 0.97);
+  border-left-color: rgba(255, 255, 255, 0.08);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Header */
+.lss-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: linear-gradient(135deg, #1b2540 0%, #2d3a5e 100%);
+  flex-shrink: 0;
+}
+
+.lss-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.lss-header-icon {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.lss-close-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: background 0.15s;
+  line-height: 1;
+}
+
+.lss-close-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* Body */
+.lss-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+}
+
+/* Section */
+.lss-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.lss-dark .lss-section-label {
+  color: #9ca3af;
+}
+
+/* Section element */
+.lss-body section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Inline control label (icon + text) */
+.lss-ctrl-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.lss-dark .lss-ctrl-label {
+  color: #9ca3af;
+}
+
+
+.lss-font-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+}
+
+.lss-font-btn {
+  padding: 8px 4px 6px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.lss-dark .lss-font-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.lss-font-btn:hover {
+  border-color: #1b2540;
+  transform: translateY(-1px);
+}
+
+.lss-dark .lss-font-btn:hover {
+  border-color: #60a5fa;
+}
+
+.lss-font-btn.lss-active {
+  border-color: #1b2540;
+  background: linear-gradient(135deg, #e8eef8 0%, #d6e4f7 100%);
+}
+
+.lss-dark .lss-font-btn.lss-active {
+  border-color: #60a5fa;
+  background: rgba(96, 165, 250, 0.15);
+}
+
+.lss-font-preview {
+  font-size: 18px;
+  line-height: 1;
+  color: #1b2540;
+}
+
+.lss-dark .lss-font-preview {
+  color: #e5e7eb;
+}
+
+.lss-font-name {
+  font-size: 10px;
+  font-weight: 600;
+  color: #374151;
+  font-family: Inter, sans-serif;
+}
+
+.lss-dark .lss-font-name {
+  color: #d1d5db;
+}
+
+.lss-font-sub {
+  font-size: 8.5px;
+  color: #9ca3af;
+  font-family: Inter, sans-serif;
+  line-height: 1;
+}
+
+.lss-dark .lss-font-name {
+  color: #9ca3af;
+}
+
+/* Slider */
+.lss-slider-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.lss-slider-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1b2540;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 12px;
+  min-width: 44px;
+  text-align: center;
+}
+
+.lss-dark .lss-slider-value {
+  color: #e5e7eb;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.lss-range {
+  width: 100%;
+  height: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: linear-gradient(to right, #1b2540 0%, #1b2540 var(--fill), #e5e7eb var(--fill), #e5e7eb 100%);
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.lss-dark .lss-range {
+  background: linear-gradient(to right, #60a5fa 0%, #60a5fa var(--fill), rgba(255,255,255,0.1) var(--fill), rgba(255,255,255,0.1) 100%);
+}
+
+.lss-range::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #1b2540;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  transition: transform 0.1s;
+}
+
+.lss-dark .lss-range::-webkit-slider-thumb {
+  background: #60a5fa;
+}
+
+.lss-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.lss-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #1b2540;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+}
+
+/* Alignment toggle */
+.lss-align-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.lss-align-btn {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #374151;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.lss-dark .lss-align-btn {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+  color: #d1d5db;
+}
+
+.lss-align-btn:hover {
+  border-color: #1b2540;
+}
+
+.lss-dark .lss-align-btn:hover {
+  border-color: #60a5fa;
+}
+
+.lss-align-btn.lss-active {
+  border-color: #1b2540;
+  background: linear-gradient(135deg, #e8eef8 0%, #d6e4f7 100%);
+  font-weight: 600;
+  color: #1b2540;
+}
+
+.lss-dark .lss-align-btn.lss-active {
+  border-color: #60a5fa;
+  background: rgba(96,165,250,0.15);
+  color: #60a5fa;
+}
+
+/* Divider */
+.lss-divider {
+  border: none;
+  border-top: 1px solid rgba(0,0,0,0.07);
+}
+
+.lss-dark .lss-divider {
+  border-top-color: rgba(255,255,255,0.07);
+}
+
+/* Reset button */
+.lss-reset-btn {
+  width: 100%;
+  padding: 9px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.lss-dark .lss-reset-btn {
+  border-color: rgba(255,255,255,0.15);
+  color: #9ca3af;
+}
+
+.lss-reset-btn:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: #fef2f2;
+}
+
+.lss-dark .lss-reset-btn:hover {
+  background: rgba(239,68,68,0.1);
+}
+
+/* Trigger button in preview header */
+.lss-trigger-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1.5px solid rgba(27, 37, 64, 0.25);
+  border-radius: 6px;
+  background: rgba(27, 37, 64, 0.06);
+  color: #1b2540;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+
+.lss-trigger-btn:hover {
+  background: rgba(27, 37, 64, 0.12);
+  border-color: rgba(27, 37, 64, 0.4);
+  transform: translateY(-1px);
+}
+
+.lss-trigger-btn.lss-trigger-active {
+  background: #1b2540;
+  border-color: #1b2540;
+  color: #fff;
+}
+
+.lss-trigger-dark {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #e5e7eb;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.lss-trigger-dark:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.lss-trigger-dark.lss-trigger-active {
+  background: #60a5fa;
+  border-color: #60a5fa;
+  color: #0f172a;
+}
