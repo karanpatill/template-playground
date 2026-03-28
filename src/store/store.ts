@@ -1,4 +1,36 @@
 import { create } from "zustand";
+
+export interface LegalTheme {
+  fontFamily: string;
+  fontSize: number;
+  lineHeight: number;
+  marginPx: number;
+  textAlign: 'left' | 'justify';
+  letterSpacing: number;   // em units × 100 (so 0 = 0em, 5 = 0.05em)
+  paraSpacing: number;     // px
+  fontWeight: 400 | 700;
+}
+
+export const DEFAULT_LEGAL_THEME: LegalTheme = {
+  fontFamily: 'Georgia, serif',
+  fontSize: 14,
+  lineHeight: 1.6,
+  marginPx: 20,
+  textAlign: 'left',
+  letterSpacing: 0,
+  paraSpacing: 8,
+  fontWeight: 400,
+};
+
+const getInitialLegalTheme = (): LegalTheme => {
+  if (typeof window !== 'undefined') {
+    try {
+      const saved = localStorage.getItem('legal-theme');
+      if (saved) return { ...DEFAULT_LEGAL_THEME, ...(JSON.parse(saved) as Partial<LegalTheme>) };
+    } catch { /* ignore */ }
+  }
+  return { ...DEFAULT_LEGAL_THEME };
+};
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { debounce } from "ts-debounce";
@@ -65,6 +97,8 @@ interface AppState {
   setShowLineNumbers: (value: boolean) => void;
   isSettingsOpen: boolean;
   setSettingsOpen: (value: boolean) => void;
+  legalTheme: LegalTheme;
+  setLegalTheme: (partial: Partial<LegalTheme>) => void;
 }
 
 export interface DecompressedData {
@@ -196,6 +230,7 @@ const useAppStore = create<AppState>()(
       isDataCollapsed: false,
       showLineNumbers: getInitialLineNumbers(),
       isSettingsOpen: false,
+      legalTheme: getInitialLegalTheme(),
       toggleModelCollapse: () => set((state) => ({ isModelCollapsed: !state.isModelCollapsed })),
       toggleTemplateCollapse: () => set((state) => ({ isTemplateCollapsed: !state.isTemplateCollapsed })),
       toggleDataCollapse: () => set((state) => ({ isDataCollapsed: !state.isDataCollapsed })),
@@ -206,6 +241,15 @@ const useAppStore = create<AppState>()(
         set({ showLineNumbers: value });
       },
       setSettingsOpen: (value: boolean) => set({ isSettingsOpen: value }),
+      setLegalTheme: (partial: Partial<LegalTheme>) => {
+        set((state) => {
+          const updated = { ...state.legalTheme, ...partial };
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('legal-theme', JSON.stringify(updated));
+          }
+          return { legalTheme: updated };
+        });
+      },
       setEditorsVisible: (value) => {
         const state = get();
         if (!value && !state.isPreviewVisible) {

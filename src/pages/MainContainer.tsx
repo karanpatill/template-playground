@@ -13,16 +13,20 @@ import "../styles/pages/MainContainer.css";
 import html2pdf from "html2pdf.js";
 import { Button, message } from "antd";
 import * as monaco from "monaco-editor";
-import { MdFormatAlignLeft, MdChevronRight, MdExpandMore } from "react-icons/md";
+import { MdFormatAlignLeft, MdChevronRight, MdExpandMore, MdBalance } from "react-icons/md";
 import DOMPurify from "dompurify";
+import { LegalStylingStudio } from "../components/LegalStylingStudio";
 
 const MainContainer = () => {
   const agreementHtml = useAppStore((state) => state.agreementHtml);
   const downloadRef = useRef<HTMLDivElement>(null);
   const jsonEditorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isLegalStudioOpen, setIsLegalStudioOpen] = useState(false);
   const backgroundColor = useAppStore((state) => state.backgroundColor);
   const textColor = useAppStore((state) => state.textColor);
+  const legalTheme = useAppStore((state) => state.legalTheme);
+  const isDark = backgroundColor !== '#ffffff';
 
   const handleDownloadPdf = async () => {
     const element = downloadRef.current;
@@ -30,8 +34,10 @@ const MainContainer = () => {
 
     try {
       setIsDownloading(true);
+      // Convert px margin to mm (1px ≈ 0.2646mm)
+      const marginMm = Math.round(legalTheme.marginPx * 0.2646);
       const options = {
-        margin: 10,
+        margin: marginMm,
         filename: 'agreement.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
@@ -216,31 +222,59 @@ const MainContainer = () => {
         {isPreviewVisible && (
           <>
             <Panel defaultSize={37.5} minSize={20}>
-              <div className="main-container-preview-panel tour-preview-panel" style={{ backgroundColor: previewBackgroundColor }}>
+              <div className="main-container-preview-panel tour-preview-panel" style={{ backgroundColor: previewBackgroundColor, position: 'relative' }}>
                 <div className={`main-container-preview-header ${backgroundColor === '#ffffff' ? 'main-container-preview-header-light' : 'main-container-preview-header-dark'}`} style={{ backgroundColor: previewHeaderColor }}>
                   <span>Preview</span>
-                  <Button
-                    onClick={() => void handleDownloadPdf()}
-                    loading={isDownloading}
-                    style={{ marginLeft: "10px" }}
-                  >
-                    Download PDF
-                  </Button>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <button
+                      className={`lss-trigger-btn${isDark ? ' lss-trigger-dark' : ''}${isLegalStudioOpen ? ' lss-trigger-active' : ''}`}
+                      onClick={() => setIsLegalStudioOpen((v) => !v)}
+                      title="Legal Styling Studio"
+                    >
+                      <MdBalance size={15} style={{ flexShrink: 0 }} /> Style
+                    </button>
+                    <Button
+                      onClick={() => void handleDownloadPdf()}
+                      loading={isDownloading}
+                    >
+                      Download PDF
+                    </Button>
+                  </div>
                 </div>
                 <div className="main-container-preview-content" style={{ backgroundColor: previewBackgroundColor }}>
                   <div className="main-container-preview-text">
                     <div
-                      ref={downloadRef}
-                      className="main-container-agreement"
-                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(agreementHtml) }}
+                      className="lss-preview-container"
                       style={{
-                        color: textColor,
-                        backgroundColor: previewBackgroundColor,
-                        padding: "20px"
-                      }}
-                    />
+                        '--lss-para-spacing': `${legalTheme.paraSpacing}px`,
+                        '--lss-letter-spacing': `${legalTheme.letterSpacing / 100}em`,
+                      } as React.CSSProperties}
+                    >
+                      <div
+                        ref={downloadRef}
+                        className="main-container-agreement"
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(agreementHtml) }}
+                        style={{
+                          color: textColor,
+                          backgroundColor: previewBackgroundColor,
+                          padding: `${legalTheme.marginPx}px`,
+                          fontFamily: legalTheme.fontFamily,
+                          fontSize: `${legalTheme.fontSize}px`,
+                          lineHeight: legalTheme.lineHeight,
+                          textAlign: legalTheme.textAlign,
+                          fontWeight: legalTheme.fontWeight,
+                          letterSpacing: `${legalTheme.letterSpacing / 100}em`,
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
+
+                <LegalStylingStudio
+                  isOpen={isLegalStudioOpen}
+                  onClose={() => setIsLegalStudioOpen(false)}
+                  isDark={isDark}
+                />
               </div>
             </Panel>
             <PanelResizeHandle className="main-container-panel-resize-handle-horizontal" />
