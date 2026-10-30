@@ -24,6 +24,7 @@ import { templateFromContent } from "../utils/templateArchive";
 import { sandboxResolvers } from "./sandboxResolvers";
 import { rebuildInSandbox } from "./rebuildSandbox";
 import tour from "../components/Tour";
+import { describeLogicModel, scaffoldRequestFromModel } from "../editors/logicSource";
 
 /** sampleName of a template opened from a share link; design v2 starts on it instead of the first card. */
 export const SHARED_TEMPLATE_NAME = "Shared template";
@@ -851,7 +852,7 @@ const useAppStore = create<AppState>()(
           persistChain(chain);
         },
 
-        requestJson: '{\n  "$class": "org.acme.counter@1.0.0.CounterRequest",\n  "increment": 1\n}',
+        requestJson: scaffoldRequestFromModel(describeLogicModel(playground.MODEL)),
         setRequestJson: (json: string) => set({ requestJson: json }),
 
         toggleModelCollapse: () =>
@@ -942,12 +943,12 @@ const useAppStore = create<AppState>()(
           }
         },
         loadSample: async (name: string) => {
-          const sample = SAMPLES.find((s) => s.NAME === name);
+          const sample = get().samples.find((s) => s.NAME === name) || SAMPLES.find((s) => s.NAME === name);
           if (sample) {
             const state = get();
             const logicTs = sample.LOGIC ?? "";
             const hasLogic = !!sample.LOGIC && state.isLogicFeatureEnabled;
-            const defaultRequest = '{\n  "$class": "org.acme.counter@1.0.0.CounterRequest",\n  "increment": 1\n}';
+            const defaultRequest = scaffoldRequestFromModel(describeLogicModel(sample.MODEL));
             const requestJson = sample.REQUEST ? JSON.stringify(sample.REQUEST, null, 2) : defaultRequest;
             invalidateCompilations();
             set(() => ({
